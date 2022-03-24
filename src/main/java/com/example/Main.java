@@ -1,16 +1,16 @@
 package com.example;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,14 +40,12 @@ public class Main extends Application {
 
         VBox layout2 = new VBox(20);
         layout2.setAlignment(Pos.CENTER);
-        layout2.getChildren().addAll(scene2Label, wordView,backButton);
+        layout2.getChildren().addAll(scene2Label, wordView, backButton);
 
         button.setOnAction(e -> {
             App analyzeApp = new App(urlField.getText());
             wordView.getItems().clear();
             wordView.getItems().add(analyzeApp.Main());
-
-            //layout2.getChildren().addAll(scene2Label, wordView,backButton);
             stage.setScene(scene2);
         });
 
@@ -56,10 +54,10 @@ public class Main extends Application {
         VBox layoutBox = new VBox(20);
         layoutBox.setAlignment(Pos.CENTER);
         layoutBox.getChildren().addAll(introLabel, instructionLabel, urlField, button);
+        layoutBox.setBackground(new Background(new BackgroundFill(Color.SKYBLUE, null, null)));
 
         scene = new Scene(layoutBox, 640, 480);
         scene2 = new Scene(layout2, 640, 480);
-        scene3 = new Scene(loadingBox, 640, 480);
         stage.setScene(scene);
         stage.show();
     }
