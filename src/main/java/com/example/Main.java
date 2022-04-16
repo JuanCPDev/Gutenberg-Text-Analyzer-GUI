@@ -14,22 +14,35 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.*;
+
+import static java.sql.DriverManager.getConnection;
 
 /**
  * JavaFX App
+ *
+ * @author Juan Perez
+ * @version 1.2
  */
 public class Main extends Application {
 
     private static Scene scene;
     private static Scene scene2;
-    private static Scene scene3;
 
+
+    /**
+     * Starts the JavaFX app with scene 1 as the intro page
+     *
+     * @param stage
+     * @throws IOException
+     */
     @Override
     public void start(Stage stage) throws IOException {
+        String dbUrl = "jdbc:sqlserver://localhost:64253;databaseName=wordoccurences;encrypt=false;IntegratedSecurity=true;";
         ListView wordView = new ListView<>();
-        VBox loadingBox = new VBox(20);
         stage.setTitle("Text Analyzer");
         Button button = new Button("Proccess URL");
+
 
         Label introLabel = new Label("Welcome to Text Analyzer");
         Label instructionLabel = new Label(
@@ -45,7 +58,20 @@ public class Main extends Application {
         button.setOnAction(e -> {
             App analyzeApp = new App(urlField.getText());
             wordView.getItems().clear();
-            wordView.getItems().add(analyzeApp.Main());
+            analyzeApp.Main();
+
+            try (Connection con = getConnection(dbUrl); Statement stm = con.createStatement()) {
+                ResultSet rs = stm.executeQuery("SELECT * FROM word");
+                while (rs.next()) {
+                    //Fettch results and add each to the JavaFX wordview
+                    wordView.getItems().add("Word: " + rs.getString("words") + ", Frequency: " + rs.getInt("frequency"));
+                }
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+
             stage.setScene(scene2);
         });
 
@@ -62,8 +88,8 @@ public class Main extends Application {
         stage.show();
     }
 
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
         launch();
     }
 
